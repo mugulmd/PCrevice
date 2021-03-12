@@ -5,6 +5,12 @@ import processing.core.PVector;
 
 /**
  *
+ * Class to encode an edge in the network. Its geometric representation is a segment.
+ *
+ * @see Network
+ * @see Node
+ * @see AbstractSegment
+ *
  * @author Loïc Vital
  *
  */
@@ -14,7 +20,13 @@ public class Edge {
 	public int id;
 	public Node source, target;
 	public AbstractSegment segment;
-	public float affineWeight, supportAngle;
+
+	/**
+	 *
+	 * @param _id
+	 * @param _source
+	 * @param _target
+	 */
 
 	public Edge(int _id, Node _source, Node _target) {
 		id = _id;
@@ -22,17 +34,21 @@ public class Edge {
 		target = _target;
 	}
 
+	/**
+	 *
+	 */
+
 	public void setGeoLine() {
 		segment = new LineSegment(source.elt.pos, target.elt.pos);
-		affineWeight = 0.f;
-		supportAngle = PApplet.PI;
 	}
 
+	/**
+	 *
+	 * @param ctrl
+	 */
+
 	public void setGeoParabola(PVector ctrl) {
-		ParabolaSegment parabola = new ParabolaSegment(source.elt.pos, ctrl, target.elt.pos);
-		segment = parabola;
-		affineWeight = (float)Math.pow(parabola.supportTriangleArea(), 1./3.);
-		supportAngle = parabola.supportAngle();
+		segment = new ParabolaSegment(source.elt.pos, ctrl, target.elt.pos);
 	}
 
 }

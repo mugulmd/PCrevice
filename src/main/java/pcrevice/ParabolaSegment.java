@@ -5,6 +5,10 @@ import processing.core.PGraphics;
 
 /**
  *
+ * Class to represent a parabola segment, encoded as a quadratic Bézier curve.
+ *
+ * @see AbstractSegment
+ *
  * @author Loïc Vital
  *
  */
@@ -57,18 +61,6 @@ public class ParabolaSegment extends AbstractSegment {
 	@Override
 	public void drawOn(PGraphics canvas) {
 		canvas.bezier(start.x, start.y, ctrl.x, ctrl.y, ctrl.x, ctrl.y, end.x, end.y);
-	}
-
-	public float supportTriangleArea() {
-		float a = PVector.dist(start, ctrl);
-		float b = PVector.dist(ctrl, end);
-		float c = PVector.dist(end, start);
-		float s = 0.5f*(a+b+c);
-		return (float)Math.sqrt(s*(s-a)*(s-b)*(s-c));
-	}
-
-	public float supportAngle() {
-		return Math.abs(PVector.angleBetween(PVector.sub(start, ctrl), PVector.sub(end, ctrl)));
 	}
 
 }

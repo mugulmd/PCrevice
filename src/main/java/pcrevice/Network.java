@@ -6,6 +6,11 @@ import java.util.Collection;
 
 /**
  *
+ * Class to represent an affine connection network.
+ *
+ * @see Node
+ * @see Edge
+ *
  * @author Loïc Vital
  *
  */

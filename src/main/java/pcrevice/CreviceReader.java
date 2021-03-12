@@ -1,34 +1,39 @@
 package pcrevice;
 
 import processing.core.PApplet;
-import processing.core.PImage;
 import processing.core.PVector;
 
 import processing.data.JSONObject;
 import processing.data.JSONArray;
 
+import java.io.File;
+
 import java.util.List;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.HashMap;
 
 /**
+ *
+ * Class to encapsulate reading operations on files produced by the Crevice GUI to build the corresponding objects.
+ *
+ * @see Network
+ * @see Skeleton
  *
  * @author Loïc Vital
  *
  */
 
-public abstract class PCreviceApplet extends PApplet {
+public class CreviceReader {
 
-	protected PImage loadSurface(String filename) {
-		PImage surface = loadImage(filename);
-		return surface;
-	}
+	/**
+	 *
+	 * @param filename
+	 * @return
+	 */
 
-	protected List<LineSegment> loadLines(String filename) {
+	public List<LineSegment> loadLines(String filename) {
 		List<LineSegment> lines = new LinkedList<LineSegment>();
 		
-		JSONObject obj = loadJSONObject(filename);
+		JSONObject obj = PApplet.loadJSONObject(new File(filename));
 
 		JSONArray arr = obj.getJSONArray("lines");
 		for(int i=0; i<arr.size(); i++) {
@@ -40,10 +45,16 @@ public abstract class PCreviceApplet extends PApplet {
 		return lines;
 	}
 
-	protected Network loadNetwork(String filename) {
+	/**
+	 *
+	 * @param filename
+	 * @return
+	 */
+
+	public Network loadNetwork(String filename) {
 		Network net = new Network();
 		
-		JSONObject obj = loadJSONObject(filename);
+		JSONObject obj = PApplet.loadJSONObject(new File(filename));
 
 		JSONArray inNodesArr = obj.getJSONArray("inNodes");
 		for(int i=0; i<inNodesArr.size(); i++) {
@@ -66,10 +77,17 @@ public abstract class PCreviceApplet extends PApplet {
 		return net;
 	}
 
-	protected Skeleton loadSkeleton(String filename, Network net) {
+	/**
+	 *
+	 * @param filename
+	 * @param net
+	 * @return
+	 */
+
+	public Skeleton loadSkeleton(String filename, Network net) {
 		Skeleton skeleton = new Skeleton();
 
-		JSONObject obj = loadJSONObject(filename);
+		JSONObject obj = PApplet.loadJSONObject(new File(filename));
 
 		skeleton.rootNode = parseNodeObj(obj.getJSONObject("rootNode"));
 		skeleton.rootEdge = parseRootEdgeObj(obj.getJSONObject("rootEdge"), net, skeleton);
@@ -89,11 +107,24 @@ public abstract class PCreviceApplet extends PApplet {
 		return skeleton;
 	}
 
+	/**
+	 *
+	 * @param nodeObj
+	 * @return
+	 */
+
 	private Node parseNodeObj(JSONObject nodeObj) {
 		AffineElement elt = new AffineElement(new PVector(nodeObj.getFloat("x"), nodeObj.getFloat("y")), nodeObj.getFloat("angle"));
 		Node node = new Node(nodeObj.getInt("id"), elt);
 		return node;
 	}
+
+	/**
+	 *
+	 * @param edgeObj
+	 * @param net
+	 * @return
+	 */
 
 	private Edge parseEdgeObj(JSONObject edgeObj, Network net) {
 		Node source = net.getNode(edgeObj.getInt("sourceId"));
@@ -108,6 +139,14 @@ public abstract class PCreviceApplet extends PApplet {
 		}
 		return edge;
 	}
+
+	/**
+	 *
+	 * @param edgeObj
+	 * @param net
+	 * @param skeleton
+	 * @return
+	 */
 
 	private Edge parseRootEdgeObj(JSONObject edgeObj, Network net, Skeleton skeleton) {
 		Node source = skeleton.rootNode;

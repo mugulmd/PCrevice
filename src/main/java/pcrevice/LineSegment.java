@@ -5,6 +5,10 @@ import processing.core.PGraphics;
 
 /**
  *
+ * Class to represent a line segment
+ *
+ * @see AbstractSegment
+ *
  * @author Loïc Vital
  *
  */
